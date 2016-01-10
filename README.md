@@ -1,5 +1,5 @@
 # ws2812b_rpi
-A library for driving WS2812b based (aka Neopixel) LED strands connected to a Raspberry Pi. Allows for convenient setup of matrix-like displays. Uses standard addressing and standard color coding like in image processing. For code interchange, this library also exists for standard AVR or for Arduino-like boards.
+A library for driving WS2812b based (aka Neopixel) LED strands connected to a Raspberry Pi. Allows for convenient setup of matrix-like displays. Uses standard addressing and standard color coding like in image processing. For code interchange, this library also exists for standard AVR (https://github.com/Mattscheibe/ws2812b.git) or for Arduino-like boards (https://github.com/Mattscheibe/WS2812b_arduino.git, supports more than one strand).
 - - -
 * This is for a raspberry pi controlling an WS2812B LEDs strand directly from its pin GPIO18.
 * Parts of this strand might be arranged in any kind of matrix shape, with any kind of wiring scheme between these parts.
