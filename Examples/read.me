@@ -1,0 +1,13 @@
+main.c will show how some 9 LEDs will light up in different colors. Due to setBrightness() limiting maximum intensity,
+color resolution is also limited. Try changing setBrightness() values and try to understand what impact this has.
+
+main2.c will show how some 130 LEDs will light up in different colors. Brightness is limited, so that the poor Pi
+will be able to drive all LEDs with sufficient current.
+
+main3.c will make some 130LEDs "breath" or "heartbeat" (change intensity of light).
+
+main4.c will show how to include a delay function similar to arduino's delay function, using drogon's wiringPi
+library by including it in the main file and by adding -lwiringPi as a compiler flag (you need to uncomment it in
+the Makefile, so first type "make make" and modify it). main4.c will make one LED blink.
+
+main.c, main2.c and main3.c will also run on fewer LEDs (minimum, of course, is one LED...).
