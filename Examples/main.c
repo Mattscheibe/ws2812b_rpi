@@ -3,7 +3,7 @@
 int main() { 
   // Init:
   initLEDs(1,9,1); // 1 linear strand with 9 leds, therefore connection type 1
-  setBrightness(3); // low brightness, won't blind you
+  setMaxBrightness(3); // low brightness, won't blind you
 
   // Nice color pattern:
   int x;

@@ -1,13 +1,13 @@
 /*
-* ws2812b lib V1.0a: Raspberry Pi programming interface for controlling WS2812B RGB LEDs
+* ws2812b lib: Raspberry Pi programming interface for controlling WS2812B RGB LEDs
 *
 * needs to be used with the library provided by 626Pilot from April/May 2014, named ws2812-RPi
 *
 * Author: Chris (Mattscheibenpost@gmail.com)
 *
-* January 6th, 2016 V1.0a Initial Version
+* January 16th, 2016 V1.0b
 *
-* License: GNU GPL v2 (see License.txt)
+* License: GNU GPL v2 (see LICENSE file)
 */
 
 ////////////////////////////////////////////////////////////////////////////ç
@@ -81,7 +81,7 @@
 // use Color_t from ws2812-RPi as structure for RGB values
 //
 Color_t* pixel;// = array with all pixel color values, will be allocated at runtime
-unsigned char brightnessLEDs; // either change with setBrightness(0...255) or by setting it directly
+unsigned char brightnessLEDs; // either change with setMaxBrightness(0...255) or by setting it directly
 unsigned int idx(unsigned int row, unsigned int column); // gets index (offset) in a (linearily wired) strand
 unsigned int _height; // number of rows, will be set to one for one single linear strand, will be set by calling initLEDs appropriately
 unsigned int _width; // number of columns, will be set to length for one single linear strand, will be set by calling initLEDs appropriately
@@ -96,7 +96,7 @@ unsigned long int getRGB(unsigned int row, unsigned int column);
 unsigned char getR(unsigned int row, unsigned int column);
 unsigned char getG(unsigned int row, unsigned int column);
 unsigned char getB(unsigned int row, unsigned int column);
-void setBrightness(unsigned char value); // 255 is full brightness, less will dim leds down, use 5 if in doubt
+void setMaxBrightness(unsigned char value); // 255 is full brightness, less will dim leds down, use 5 if in doubt
 void clearLEDs(); // all LEDs off
 void showLEDs();  // lights up strand with stored color value ( => displays values)
 #endif

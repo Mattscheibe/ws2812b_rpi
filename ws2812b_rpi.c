@@ -1,13 +1,13 @@
 /*
-* ws2812b_rpi lib V1.0a: Raspberry Pi programming interface for controlling WS2812B RGB LEDs
+* ws2812b_rpi lib: Raspberry Pi programming interface for controlling WS2812B RGB LEDs
 *
 * needs to be used with the library provided by 626Pilot from April/May 2014, named ws2812-RPi
 *
 * Author: Chris (Mattscheibenpost@gmail.com)
 *
-* January 9th, 2016 V1.0a Initial Version
+* January 16th, 2016 V1.0b
 *
-* License: GNU GPL v2 (see License.txt)
+* License: GNU GPL v2 (see LICENSE file)
 */
 
 ////////////////////////////////////////////////////////////////////////////ç
@@ -89,9 +89,6 @@ void initLEDs(unsigned int matrixWidthOrJustLengthForNoMatrix, unsigned int matr
   initHardware();
   clearLEDBuffer();
 
-  // brightness will be handled elsewhere, so:
-  setRPiBrightness(1.0);
-  
   // initialize our own pixel and brightness handling and clear leds at startup
   pixel = (Color_t*)malloc(matrixWidthOrJustLengthForNoMatrix*matrixHeightOrJustOneForNoMatrix*3);
   _width = matrixWidthOrJustLengthForNoMatrix;
@@ -211,7 +208,7 @@ unsigned char getB(unsigned int i, unsigned int j) {
   unsigned int x = idx(i,j);
   return pixel[x].b;
 }
-void setBrightness(unsigned char value) {
+void setMaxBrightness(unsigned char value) {
   brightnessLEDs = value;
 }
 void clearLEDs() {

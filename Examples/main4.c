@@ -4,7 +4,7 @@
 int main() { 
   // Init:
   initLEDs(1,1,1); // 1 LED
-  setBrightness(3); // low brightness, won't blind you
+  setMaxBrightness(3); // low brightness, won't blind you
   // start WiringPi:
   if (wiringPiSetupSys() == -1)
     return 1;

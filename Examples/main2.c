@@ -4,7 +4,7 @@
 int main() { 
   // Init:
   initLEDs(13,10,14); // matrix with 13 rows and 10 columns, wiring starting at lower right corner, shortes wiring paths (type 14)
-  setBrightness(1); // low brightness, won't blind you
+  setMaxBrightness(1); // low brightness, won't blind you
 
   // step by step to green
   unsigned int i,j;

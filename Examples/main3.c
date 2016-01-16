@@ -18,12 +18,12 @@ int main() {
   for (j=0;j<10;j++) {
     // 1. up:
     for (i=0;i<20;i++) {
-      setBrightness(i);
+      setMaxBrightness(i);
       showLEDs();
     }
     // 2. down
     for (i=20;i>0;i--) {
-      setBrightness(i);
+      setMaxBrightness(i);
       showLEDs();
     }
   }
