@@ -1,4 +1,4 @@
-main.c will show how some 9 LEDs will light up in different colors. Due to setBrightness() limiting maximum intensity,
+main1.c will show how some 9 LEDs will light up in different colors. Due to setBrightness() limiting maximum intensity,
 color resolution is also limited. Try changing setBrightness() values and try to understand what impact this has.
 
 main2.c will show how some 130 LEDs will light up in different colors. Brightness is limited, so that the poor Pi
@@ -6,8 +6,16 @@ will be able to drive all LEDs with sufficient current.
 
 main3.c will make some 130LEDs "breath" or "heartbeat" (change intensity of light).
 
-main4.c will show how to include a delay function similar to arduino's delay function, using drogon's wiringPi
-library by including it in the main file and by adding -lwiringPi as a compiler flag (you need to uncomment it in
-the Makefile, so first type "make make" and modify it). main4.c will make one LED blink.
+main4.c will show how to include a short time delay function. main4.c will make one LED blink.
 
-main.c, main2.c and main3.c will also run on fewer LEDs (minimum, of course, is one LED...).
+main5.c will also make one LED blink, yet continuesly. It is stoppable by pressing CTRL-C, though. (Use as reference for STOPPABLE macro!)
+
+main1.c, main2.c and main3.c will also run on fewer LEDs (minimum, of course, is one LED...).
+
+===========================================================================================================================================
+
+Included Makefile is a template for new projects. Copy it to a new project's directory and edit it to adapt variable settings to your needs.
+
+Then type "make edit" to edit your program, and "make run" to run your program.
+
+Type "make make" in order to change program file's name. (For these examples, names might be any one of, main1.c to main5.c .

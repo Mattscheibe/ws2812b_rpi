@@ -1,42 +1,13 @@
-#Name of main file (without .c):
-NAME=main
-
-#More C-files:
-MORE=ws2812b_rpi ws2812-RPi
-
-#Additional files to be looked at:
-NOTICE=Makefile
-
-#Set according to your needs, e.g. gedit:
-EDITOR=joe
-
-
-CFLAGS=-g -O0 -Wall -Wformat
-LDFLAGS=-lm
-
-#Uncomment to include wiringPi (e.g. for delays):
-#LDFLAGS+=-lwiringPi
-
-SRC=$(NAME).c $(MORE:%=%.c)
-OBJ=$(SRC:%.c=%.o)
-NOTICE+=$(MORE:%=%.h)
-
-all: $(NAME).bin
-
-$(NAME).bin: $(OBJ) $(NOTICE)
-	gcc ${CFLAGS} ${LDFLAGS} $(OBJ) -o $(NAME).bin
-
-edit:
-	$(EDITOR) $(NAME).c
-
-make:
-	$(EDITOR) Makefile
-
-run: $(NAME).bin
-	-sudo ./$(NAME).bin
-
+compile: ws2812b_rpi.o
+ws2812b_rpi.o: ws2812b_rpi.c ws2812b_rpi.h
+	if [ ! -e /usr/local/include/ws2811/dma.h ]; then echo "ws281x library by J. Graff missing, please install it first"; fi; exit
+	gcc -I/usr/local/include/ws2811 -c ws2812b_rpi.c
+libws2812b_rpi.a: ws2812b_rpi.o
+	ar rcs libws2812b_rpi.a ws2812b_rpi.o
+	ranlib libws2812b_rpi.a
+install: libws2812b_rpi.a ws2812b_rpi.h
+	mkdir -p /usr/local/include/ws2812b_rpi; cp ws2812b_rpi.h /usr/local/include/ws2812b_rpi; mkdir -p /usr/local/lib; cp libws2812b_rpi.a /usr/local/lib
 clean:
-	rm -f $(OBJ) $(NAME).bin D???JOE *~ *.bak
-	
-.PHONY: all make run clean edit
+	$(RM) *~ *.o *.a
+.PHONY: compile install
 .SILENT:

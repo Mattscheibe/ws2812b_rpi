@@ -1,5 +1,4 @@
-#include "ws2812b_rpi.h"
-#include <wiringPi.h>
+#include <ws2812b_rpi.h>
 
 int main() { 
   // Init:
@@ -20,13 +19,13 @@ int main() {
     showLEDs();
     
     // Pause a little:
-    delay(50);
+    usleep(50000);
     
     // Switch LED off:
     clearLEDs();
     
     // Pause a little more:
-    delay(250);
+    usleep(250000);
   }
 
   // Exit cleanly:

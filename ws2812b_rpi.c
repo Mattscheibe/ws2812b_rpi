@@ -1,11 +1,14 @@
 /*
 * ws2812b_rpi lib: Raspberry Pi programming interface for controlling WS2812B RGB LEDs
 *
-* needs to be used with the library provided by 626Pilot from April/May 2014, named ws2812-RPi
+* needs to be used with the library provided by Jeremy Garff, named rpi_ws281x
+*
+* note that former versions of this interface (before Jan 6th, 2021) used a different
+* library, from 626pilot, that only worked well on RPi 1, and not on any newer models
 *
 * Author: Chris (Mattscheibenpost@gmail.com)
 *
-* January 16th, 2016 V1.0b
+* January 6th, 2021 V1.1a
 *
 * License: GNU GPL v2 (see LICENSE file)
 */
@@ -15,11 +18,11 @@
 // ======================================================================= //
 // at the beginning of your program write something like:                  //
 //                                                                         //
-// initLEDs(matrixWidth, matrixHeight, matrixType);                        //
+// initLEDs(matrixWidth, matrixHeight, matrixType, gpioPin);               //
 //                                                                         //
 // for single strands (no matrix) set matrixWidth to 1                     //
 // for single strands (no matrix) set matrixHeight to length of strand     //
-// for single strands (no matrix) set to matrixType to 1                   //
+// for single strands (no matrix) set matrixType to 1                      //
 //                                                                         //
 // for a real matrix please set type according to wiring scheme chosen:    //
 //                                                                         //
@@ -50,54 +53,82 @@
 // (despite schemes being illustrated with 3 or 4 elements here, they      //
 //  may actually be of any length and number)                              //
 //                                                                         //
+// for gpioPin choose any of those suggested by Jeremy Garff's library     //
+// - and make sure that this library is properly installed first, else     //
+// this interface's execution will fail                                    //
+//                                                                         //
+// I recommend using pin 40 (GPIO29 = PCM_DOUT) because this will activate //
+// PCM mode which is compatible with any Pi version and does not implicate //
+// that you either (disable PWM-audio) or (enable SPI and force core speed //
+// to be fixed) for newer Pi models. If you absolutely want to use PWM or  //
+// SPI, change Pi's settings beforehand and preferably use one of pin 12   //
+// (GPIO18 = PWM0), for PWM mode, or pin 19 (GPIO12 = SPI_MOSI), for       //
+//  maximum code compatibility between different Pi versions.              //
+//                                                                         //
+// Recommended wiring scheme:   Pi                           LED           //
+// (for short strands that      ==                           ===           //
+//  can be powered from Pi's    pin 2 +5V-----------|>|------5V            //
+//  +5V, max. 1A current)                          1N4007                  //
+//                                                                         //
+//                              pin 40 PCM_DOUT----/\/\/\----DIN           //
+//                                                  470R                   //
+//                                                                         //
+//                              pin 20 GND-------------------GND           //
+//                                                                         //     
+// corresponding value for gpioPin above: 21                               //
+//                                                                         //
 /////////////////////////////////////////////////////////////////////////////
 // C A L L   endLEDs();   A T   T H E   E N D   O F   Y O U R   main()     //
 /////////////////////////////////////////////////////////////////////////////
 
 #include "ws2812b_rpi.h"
-void initLEDs(unsigned int matrixWidthOrJustLengthForNoMatrix, unsigned int matrixHeightOrJustOneForNoMatrix, unsigned char matrixTypeAnyOfSixteenPossibleTypes) {
+
+void initLEDs(unsigned int matrixWidthOrJustLengthForNoMatrix, unsigned int matrixHeightOrJustOneForNoMatrix, unsigned char matrixTypeAnyOfSixteenPossibleTypes, unsigned char gpioPin29recommendedWillImplicitlyChooseBetweenPCMorPWMorSPImode) {
   // please initially call once ( and do not forget to terminate main program by calling "endLEDs();" at its end )
- 
-  // Check "Single Instance"
-  int pid_file = open("/var/run/whatever.pid", O_CREAT | O_RDWR, 0666);
-  int rc = flock(pid_file, LOCK_EX | LOCK_NB);
-  if(rc) {
-      if(EWOULDBLOCK == errno)
-      {
-          // another instance is running
-          printf("Instance already running\n");
-          exit(EXIT_FAILURE);
-      }
-  }
-
-  // Catch all signals possible - it's vital we kill the DMA engine on process exit!
-  int i;
-  for (i = 0; i < 64; i++) {
-          struct sigaction sa;
-          memset(&sa, 0, sizeof(sa));
-          sa.sa_handler = terminate;
-          sigaction(i, &sa, NULL);
-  }
-
-  // Don't buffer console output
-  setvbuf(stdout, NULL, _IONBF, 0);
-
-  // How many LEDs (also, define accordingly in ws2812-RPi.h)
-  numLEDs = 169;
+  ws2811_return_t ret;
   
-  // Init PWM generator and clear LED buffer
-  initHardware();
-  clearLEDBuffer();
-
-  // initialize our own pixel and brightness handling and clear leds at startup
-  pixel = (Color_t*)malloc(matrixWidthOrJustLengthForNoMatrix*matrixHeightOrJustOneForNoMatrix*3);
-  _width = matrixWidthOrJustLengthForNoMatrix;
-  _height = matrixHeightOrJustOneForNoMatrix;
+  unsigned int numLEDs = matrixWidthOrJustLengthForNoMatrix * matrixHeightOrJustOneForNoMatrix;
+    pixel = malloc(3*numLEDs);
+  _width = (unsigned int)matrixWidthOrJustLengthForNoMatrix;
+  _height = (unsigned int)matrixHeightOrJustOneForNoMatrix;
   _type = matrixTypeAnyOfSixteenPossibleTypes;
-  brightnessLEDs=255;
-  clearLEDs();
+  
+  matrix = malloc(sizeof(ws2811_led_t) * _width * _height);
+  
+  ledstring.freq = TARGET_FREQ;
+  ledstring.dmanum = DMA;
+  
+  ledstring.channel[0].gpionum = gpioPin29recommendedWillImplicitlyChooseBetweenPCMorPWMorSPImode;
+  ledstring.channel[0].count = numLEDs;
+  ledstring.channel[0].invert = 0;
+  ledstring.channel[0].brightness = 255;
+  ledstring.channel[0].strip_type = STRIP_TYPE;
 
+  ledstring.channel[1].gpionum = 0;
+  ledstring.channel[1].count = 0;
+  ledstring.channel[1].invert = 0;
+  ledstring.channel[1].brightness = 0;
+  ledstring.channel[1].strip_type = STRIP_TYPE;
+
+  if ((ret = ws2811_init(&ledstring)) != WS2811_SUCCESS) {
+    fprintf(stderr, "ws2811_init failed: %s\n", ws2811_get_return_t_str(ret));
+    return;
+  }
+  clearLEDs();
 }
+void initLEDsPCM(unsigned int w, unsigned int h, unsigned int t) {
+  initLEDs(w,h,t,21);
+}
+void initLEDsPWM(unsigned int w, unsigned int h, unsigned int t) {
+  initLEDs(w,h,t,12);
+}
+void initLEDsSPI(unsigned int w, unsigned int h, unsigned int t) {
+  initLEDs(w,h,t,19);
+}
+void setInvertedOutput() {
+  ledstring.channel[0].invert = 1;
+}
+
 unsigned int idx(unsigned int i, unsigned int j) {
   // calculates offset for chosen wiring scheme:
   unsigned int x;
@@ -209,7 +240,7 @@ unsigned char getB(unsigned int i, unsigned int j) {
   return pixel[x].b;
 }
 void setMaxBrightness(unsigned char value) {
-  brightnessLEDs = value;
+  ledstring.channel[0].brightness = (uint8_t)value;
 }
 void clearLEDs() {
   // all LEDs off
@@ -226,19 +257,13 @@ void showLEDs() {
   // a. set pixel values in transfer buffer
   unsigned int x;
   unsigned int length=_width*_height;
-  if (brightnessLEDs == 255) {
-    for (x=0;x<length;x++) {
-      setPixelColorT(x,pixel[x]);
-    }
-  } else {
-    float currentBrightness = (float)brightnessLEDs / 255.0 ;
-    for (x=0;x<length;x++) {
-      setPixelColor(x,(unsigned char)((float)pixel[x].r*currentBrightness),(unsigned char)((float)pixel[x].g*currentBrightness),(unsigned char)((float)pixel[x].b*currentBrightness));
-    }
+  for (x=0;x<length;x++) {
+    ledstring.channel[0].leds[x] = (uint32_t) (pixel[x].r + pixel[x].g*256 + pixel[x].b*65536);
   }
   // b. display transfer buffer
-  show();
+  ws2811_render(&ledstring);
 }
 void endLEDs() {
-  terminate(0);
+  clearLEDs();
+  ws2811_fini(&ledstring);
 }

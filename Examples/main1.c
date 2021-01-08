@@ -1,8 +1,8 @@
-#include "ws2812b_rpi.h"
+#include <ws2812b_rpi.h>
 
 int main() { 
   // Init:
-  initLEDs(1,9,1); // 1 linear strand with 9 leds, therefore connection type 1
+  initLEDsPCM(1,9,1); // 1 linear strand with 9 leds, therefore connection type 1
   setMaxBrightness(3); // low brightness, won't blind you
 
   // Nice color pattern:
@@ -16,6 +16,9 @@ int main() {
   // Display it:
   showLEDs();
 
+  // Pause a while (5 seconds):
+  sleep(5);
+  
   // Exit cleanly:
   endLEDs(); return 0;
 }

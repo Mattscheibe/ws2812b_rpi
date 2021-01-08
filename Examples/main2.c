@@ -1,9 +1,9 @@
-#include "ws2812b_rpi.h"
+#include <ws2812b_rpi.h>
 
 // some color effects on a matrix of LEDs:
 int main() { 
   // Init:
-  initLEDs(13,10,14); // matrix with 13 rows and 10 columns, wiring starting at lower right corner, shortes wiring paths (type 14)
+  initLEDsPCM(13,10,14); // matrix with 13 rows and 10 columns, wiring starting at lower right corner, shortes wiring paths (type 14)
   setMaxBrightness(1); // low brightness, won't blind you
 
   // step by step to green
@@ -21,7 +21,7 @@ int main() {
       setB(i,j,0xFF); // blue
     }
   }
-  // show this often, to pause a little:
+  // show this often, to pause a little (sleep(...) would be an alternative):
   for (i=0;i<150;i++) {
     showLEDs();
   }
@@ -33,6 +33,9 @@ int main() {
   }
   showLEDs();
 
+  // Pause a little:
+  sleep(5);
+  
   // Exit cleanly:
   endLEDs(); return 0;
 }

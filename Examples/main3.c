@@ -1,9 +1,9 @@
-#include "ws2812b_rpi.h"
+#include <ws2812b_rpi.h>
 
 //a matrix of LEDs changing brightness:
 int main() { 
   // Init:
-  initLEDs(13,10,14); // matrix with 13 rows and 10 columns, wiring starting at lower right corner, shortes wiring paths (type 14)
+  initLEDsPCM(13,10,14); // matrix with 13 rows and 10 columns, wiring starting at lower right corner, shortes wiring paths (type 14)
 
   unsigned int i,j;
 
@@ -27,6 +27,9 @@ int main() {
       showLEDs();
     }
   }
+  
+  // Pause a little:
+  sleep(5);
   
   // Exit cleanly:
   endLEDs(); return 0;
