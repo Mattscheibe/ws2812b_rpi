@@ -5,8 +5,8 @@ Maximum number of pixels is 5400. Strand can be cut and glued to a matrix shape.
 * This is for a raspberry pi controlling an WS2812B LEDs strand directly from its pin GPIO21 (PCM mode) oder GPIO18 (PWM mode) oder GPIO12 (SPI mode).
 * Parts of this strand might be arranged in any kind of matrix shape, with any kind of wiring scheme between these parts.
 * ws2812b_rpi offers image-processing-like commands and support for matrix-like connections between parts of strand.
-* It is an "addition/simplification for C" to J. Graff's gorgeous library rpi_ws281x https://github.com/jgarff/rpi_ws281x and must be used together with it.
-* Read J. Graff's introduction to different modes: some RPIs need special settings for PWM mode or for SPI mode. PCM mode will usually work "out of the box".
+* It is an "addition/simplification for C" to J. Garff's gorgeous library rpi_ws281x https://github.com/jgarff/rpi_ws281x and must be used together with it.
+* Read J. Garff's introduction to different modes: some RPIs need special settings for PWM mode or for SPI mode. PCM mode will usually work "out of the box".
 
 - - -
 
@@ -19,7 +19,7 @@ Maximum number of pixels is 5400. Strand can be cut and glued to a matrix shape.
 - - -
 
 ## Installation
-* download and install J. Graff's rpi_directory (might need cmake for doing this)
+* download and install J. Garff's rpi_directory (might need cmake for doing this)
 * type "sudo make install" to install this library
 * Copy over Makefile from examples to have a starting point for your projects. Edit Makefile to change EDITOR to your favourite editor.
 
