@@ -1,6 +1,6 @@
 compile: ws2812b_rpi.o
 ws2812b_rpi.o: ws2812b_rpi.c ws2812b_rpi.h
-	if [ ! -e /usr/local/include/ws2811/dma.h ]; then echo "ws281x library by J. Graff missing, please install it first"; fi; exit
+	if [ ! -e /usr/local/include/ws2811/dma.h ]; then echo "ws281x library by J. Garff missing, please install it first"; fi; exit
 	gcc -I/usr/local/include/ws2811 -c ws2812b_rpi.c
 libws2812b_rpi.a: ws2812b_rpi.o
 	ar rcs libws2812b_rpi.a ws2812b_rpi.o
