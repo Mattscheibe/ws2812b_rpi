@@ -9,19 +9,19 @@ ws2812b offers image-processing-like commands and support for matrix-like connec
 of strand.
 It is an "addition/simplification for C" to J. Garff's gorgeous library rpi_ws281x and must be used together with it.
 ---------------------------------------------------------------------------------------------------------------------------
-Find reference for wiring schemes in file ws2812b_rpi.h. Find wiring diagrams in files in directory "Docs".
-A resistor of 220...470 ohms should be used for connecting RPi GPIO 21 (PCM_DOUT, pin 40) and ws2812b Din data pin.
+Find reference for wiring schemes in file ws2812b_rpi.h.
+A resistor of 220...470 ohms should be used for connecting RPi GPIO 21 (PCM_DOUT) and ws2812b Din data pin.
 A capacitor of around 100uF should be connected between +5V and GND of strand. Both resistor and capacitor should be placed
 close to the strand.
 A diode like 1N4007 (or any other 1A type) should be used to get RPi's +5V to 5V of strand (thus reducing voltage, so that
-RPi's signal will have an appropriate level for the strand).
+RPi's signal will have an appropriate level for the strand.
 ---------------------------------------------------------------------------------------------------------------------------
 Note that when using your code you will usually have to start with a call of
   initLEDsPCM(matrixWidthOrJustLengthForNoMatrix,matrixHeightOrJustOneForNoMatrix,matrixTypeAnyOfSixteenPossibleTypes);
 and end with a call of
   endLEDs();
 ---------------------------------------------------------------------------------------------------------------------------
-main1.c to main5.c are examples for testing. A Makefile accompanies these examples. Copy it and use it for your own code.
+main.c and main2.c are examples for testing. A Makefile accompanies these examples. Copy it and use it for your own code.
 You might first edit Makefile and change target and file names and also your editor's name before you start your project.
 Afterwards
 Type "make edit" and enter your code.
@@ -29,9 +29,8 @@ Type "make run" to start your code.
 Type CTRL-\ to stop, or, if using STOPPABLE macro for your main loop, simply type CTRL-C to stop.
 ---------------------------------------------------------------------------------------------------------------------------
 Installation:
-(see short reference in Docs for a detailed list of commands)
 Download/git_clone J. Garffs library ws281x and install it. 
-Once done, download this library and type "sudo make install" to install this library ws2812b_rpi.
+Once done, type "sudo make install" to install this library ws2812b_rpi.
 Usage:
 Copy Makefile template from examples to a new directory.
 Type "make make" to set a program name, then type "make edit" to edit the program and type "make run" to run it.

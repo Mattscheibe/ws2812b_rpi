@@ -19,7 +19,7 @@ Maximum number of pixels is 5400. Strand can be cut and glued to a matrix shape.
 - - -
 
 ## Installation
-(there is a more detailed short instruction in Docs, with a list of commands)
+(there is a more detailed short instruction in Docs)
 * download and install J. Garff's rpi_directory (might need cmake for doing this)
 * download this library and type "sudo make install" to install this library
 * Copy over Makefile from examples to have a starting point for your projects. Edit Makefile to change EDITOR to your favourite editor.
